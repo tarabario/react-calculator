@@ -1,1 +1,79 @@
+@import-normalize;
+
+* {
+	box-sizing: border-box
+}
+
+p {
+	margin: 0;
+}
+
+body {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background-color: #F0F0F3;
+	font-family: "Oswald", sans-serif;
+}
+
+.calculator {
+	max-width: 450px;
+	height: 700;
+	box-shadow: 10px 10px 24px 0px rgba(174, 174, 192, 0.20);
+	border-radius: 12px
+}
+
+.output {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-end;
+	justify-content: space-between;
+	padding: 28px 33px 32px;
+	height: 200px;
+	background: linear-gradient(110deg, #2E2C2C 0%, #0B0A0A 100%);
+	border-radius: 12px 12px 0 0;
+}
+
+.previous-operand {
+	font-weight: 500;
+	font-size: 36px;
+	color: rgba(114, 138, 183, 0.65);
+}
+
+.current-operand {
+	font-weight: 500;
+	font-size: 64px;
+	color: #F2F2F4;
+}
+
+.button-block {
+	display: grid;
+	grid-template-columns: repeat(4, 70px);
+	grid-template-rows: repeat(5, 70px);
+	column-gap: 24px;
+	row-gap: 20px;
+	padding: 27px 39px;
+	background-color: #F0F0F3;
+	border-radius: 0 0 12px 12px;
+}
+
+button {
+	padding: 0;
+	border: none;
+	border-radius: 16px;
+	background: var(--neu-basic-white, #F0F0F3);
+	box-shadow: 10px 10px 24px 0px rgba(174, 174, 192, 0.3), -10px -10px 24px 0px rgba(255, 255, 255, 0.7);
+	font-family: "Oswald", sans-serif;
+	font-weight: 500;
+	font-size: 36px;
+	color: #728AB7;
+}
+
+.span-2 {
+	grid-column: span 2;
+}
+
+button:active {
+	transform: translate(3%, 3%) scale(0.95);
+}
 
