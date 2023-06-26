@@ -1,11 +1,13 @@
 import React from 'react'
+import { ACTIONS } from "./App.js";
 
 function ButtonOperation({ operation, dispatch }) {
   return (
-	  <button
-	  >
-		  {operation}
-	  </button>
+		<button
+			onClick={() => dispatch({type: ACTIONS.CHOOSE_OPERATION, payload: { operation }})}
+		>
+			{operation}
+		</button>
   )
 }
 

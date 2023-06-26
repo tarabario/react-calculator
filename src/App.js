@@ -15,6 +15,13 @@ export const ACTIONS = {
 function reducer(state, { type, payload }) {
 	switch (type) {
 		case ACTIONS.ADD_DIGIT:
+			if (state.overwrite) {
+				return {
+					...state,
+					currentOperand: `${payload.digit}`,
+					overwrite: false
+				}
+			}
 			if (state.currentOperand === "0" && payload.digit === "0") {
 				return state;
 			}
@@ -30,6 +37,9 @@ function reducer(state, { type, payload }) {
 			}
 
 		case ACTIONS.DELETE_DIGIT:
+			if (state.overwrite) {
+				return state
+			}
 			if (state.currentOperand === "0") {
 				return state;
 			}
@@ -43,6 +53,66 @@ function reducer(state, { type, payload }) {
 				...state,
 				currentOperand: state.currentOperand.slice(0, -1)
 			}
+
+		case ACTIONS.CHOOSE_OPERATION:
+			if (state.operation && state.currentOperand === "0") {
+				return {
+					...state,
+					previousOperand: `${state.previousOperand.slice(0, -1)} ${payload.operation}`,
+					operation: payload.operation
+				}
+			}
+			if (state.operation && state.previousOperand && state.currentOperand) {
+				return {
+					...state,
+					previousOperand: `${evaluate(state)} ${payload.operation}`,
+					operation: payload.operation,
+					currentOperand: "0"
+				}
+			}
+			return {
+				...state,
+				previousOperand: `${state.currentOperand} ${payload.operation}`,
+				operation: payload.operation,
+				currentOperand: "0"
+			}
+		
+		case ACTIONS.CLEAR_ALL:
+			return {
+				...state,
+				previousOperand: null,
+				opertion: null,
+				currentOperand: "0"
+			}
+
+		case ACTIONS.EVALUATE:
+			if (state.overwrite) {
+				return state;
+			}
+			return {
+				...state,
+				previousOperand: null,
+				currentOperand: evaluate(state),
+				overwrite: true
+			}
+	}
+}
+
+function evaluate({ previousOperand, currentOperand, operation }) {
+	const prev = parseFloat(previousOperand);
+	const current = parseFloat(currentOperand);
+
+	if (isNaN(prev) || isNaN(current)) return "0";
+
+	switch (operation) {
+		case "+":
+			return (prev + current).toString();
+			case "-":
+			return (prev - current).toString();
+		case "*":
+			return (prev * current).toString();
+		case "÷":
+			return (prev / current).toString();
 	}
 }
 
@@ -57,7 +127,7 @@ function App() {
 				<p className="current-operand">{currentOperand}</p>
 			</div>
 			<div className="button-block">
-				<button className="span-2">AC</button>
+				<button className="span-2" onClick={() => dispatch({type: ACTIONS.CLEAR_ALL})}>AC</button>
 				<button onClick={() => dispatch({type: ACTIONS.DELETE_DIGIT})}>C</button>
 				<ButtonOperation operation="÷" dispatch={dispatch} />
 				<ButtonDigit digit="1" dispatch={dispatch} />
@@ -74,7 +144,7 @@ function App() {
 				<ButtonOperation operation="+" dispatch={dispatch} />
 				<ButtonDigit digit="." dispatch={dispatch} />
 				<ButtonDigit digit="0" dispatch={dispatch} />
-				<button className="span-2">=</button>
+				<button className="span-2" onClick={() => dispatch({type: ACTIONS.EVALUATE})}>=</button>
 			</div>
 		</div>
 	);
